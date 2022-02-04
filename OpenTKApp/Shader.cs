@@ -1,22 +1,38 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using OpenTK.Graphics.OpenGL;
 using System.IO;
+using Utils;
 
-namespace Utils
-{  
-
-    public class ShaderLoader
+namespace OpenTKApp
+{
+    public class Shader
     {
-        ///<summary>
-        ///Create a program object and make current
-        ///</summary>
-        ///<param name="vShader">a vertex shader program</param>
-        ///<param name="fShader">a fragment shader program</param>
-        ///<param name="program">created program</param>
-        ///<returns>
-        ///return true, if the program object was created and successfully made current
-        ///</returns>
-        public static bool InitShaders(string vShaderSource, string fShaderSource, out int program)
+        private int program;
+        public Shader(string vertextShader, string fragmentShader) 
+        {
+
+            // Load shaders from files
+            string vShaderSource = null;
+            string fShaderSource = null;
+            LoadFile("Shaders/VertexShader.glsl", out vShaderSource);
+            LoadFile("Shaders/FragmentShader.glsl", out fShaderSource);
+            if (vShaderSource == null || fShaderSource == null)
+            {
+                Logger.Append("Failed load shaders from files");
+                return;
+            }
+
+            // Initialize the shaders
+            if (!InitShaders(vShaderSource, fShaderSource, out program))
+            {
+                Logger.Append("Failed to initialize the shaders");
+                return;
+            }
+        }
+
+        public bool InitShaders(string vShaderSource, string fShaderSource, out int program)
         {
             program = CreateProgram(vShaderSource, fShaderSource);
             if (program == 0)
@@ -24,8 +40,6 @@ namespace Utils
                 Logger.Append("Failed to create program");
                 return false;
             }
-
-            GL.UseProgram(program);
 
             return true;
         }
@@ -36,7 +50,7 @@ namespace Utils
         ///<param name="errorOutputFileName">a file name for error messages</param>
         ///<param name="fileName">a file name to a shader</param>
         ///<param name="shaderSource">a shader source string</param>
-        public static void LoadShader(string shaderFileName, out string shaderSource)
+        public void LoadFile(string shaderFileName, out string shaderSource)
         {
             shaderSource = null;
 
@@ -53,7 +67,7 @@ namespace Utils
             }
         }
 
-        private static int LoadShader(ShaderType shaderType, string shaderSource)
+        private int LoadShader(ShaderType shaderType, string shaderSource)
         {
             // Create shader object
             GLError.GLClearError();
@@ -84,7 +98,7 @@ namespace Utils
             return shader;
         }
 
-        private static int CreateProgram(string vShader, string fShader)
+        private int CreateProgram(string vShader, string fShader)
         {
             // Create shader object
             int vertexShader = LoadShader(ShaderType.VertexShader, vShader);
@@ -125,64 +139,26 @@ namespace Utils
             return program;
         }
 
-       
-    }
-
-    public static class Logger
-    {
-        public static string logFileName = "info.txt";
-
-        /// <summary>
-        /// Default Constructor
-        /// </summary>        
-        static Logger()
+        public void Use()
         {
-            
-            //clear out existing logfile 
-            if (File.Exists(Logger.logFileName))
+            GL.UseProgram(program);
+        }
+
+        public int GetProgram()
+        {
+            return program;
+        }
+
+        public int GetAttribLocation(string attribute)
+        {
+            //get the position of the attribute specified in text
+            int position = GL.GetAttribLocation(program, attribute);
+            if (position < 0)
             {
-                // Clear File
-                File.WriteAllText(Logger.logFileName, "");
+                Logger.Append("Failed to get the storage location of " + attribute);
+                return -1;
             }
-
-            //Let the games begin!
-            Append("===== Logger Started =====");            
+            return position;
         }
-
-        /// <summary>
-        /// Write a message to a log file
-        /// </summary>
-        /// <param name="message">a message that will append to a log file</param>
-        public static void Append(string message)
-        {
-            //format date and time into a string
-            string dt = DateTime.Now.ToString("[MM\\/dd\\/yyyy HH\\:mm\\:ss.fff] ");
-
-            //write message to log file with date and time preffix
-            File.AppendAllText(logFileName, dt + message + Environment.NewLine);
-        }
-    }
-
-    public class GLError
-    {
-        public static void GLClearError()
-        {
-            //continually call GetError until its clean clearing out the junk.
-            while (GL.GetError() != ErrorCode.NoError) ;
-        }
-
-        public static void GLCheckError()
-        {
-            ErrorCode error;
-
-            //so log as we keep getting error messsages keep printing them out, if we get NoError we're done
-            while ((error = GL.GetError()) != ErrorCode.NoError)            
-            {                
-                string errstr = "Error " + error;
-                Logger.Append(errstr);
-            }
-        }
-
-
     }
 }

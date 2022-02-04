@@ -1,3 +1,8 @@
+D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\obj\Debug\netcoreapp3.1\OpenTKApp.csproj.GenerateResource.cache
+D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\obj\Debug\netcoreapp3.1\OpenTKApp.GeneratedMSBuildEditorConfig.editorconfig
+D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\obj\Debug\netcoreapp3.1\OpenTKApp.AssemblyInfoInputs.cache
+D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\obj\Debug\netcoreapp3.1\OpenTKApp.AssemblyInfo.cs
+D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\obj\Debug\netcoreapp3.1\OpenTKApp.csproj.CoreCompileInputs.cache
 D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\bin\Debug\netcoreapp3.1\OpenTKApp.exe
 D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\bin\Debug\netcoreapp3.1\OpenTKApp.deps.json
 D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\bin\Debug\netcoreapp3.1\OpenTKApp.runtimeconfig.json
@@ -19,14 +24,9 @@ D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\bin\Debug\netcoreapp3.1\runti
 D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\bin\Debug\netcoreapp3.1\runtimes\osx-x64\native\libglfw.3.dylib
 D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\glfw3.dll
 D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\glfw3.dll
-D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\obj\Debug\netcoreapp3.1\OpenTKApp.csproj.AssemblyReference.cache
-D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\obj\Debug\netcoreapp3.1\Fresh_OpenTKApp.Form1.resources
-D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\obj\Debug\netcoreapp3.1\OpenTKApp.csproj.GenerateResource.cache
-D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\obj\Debug\netcoreapp3.1\OpenTKApp.GeneratedMSBuildEditorConfig.editorconfig
-D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\obj\Debug\netcoreapp3.1\OpenTKApp.AssemblyInfoInputs.cache
-D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\obj\Debug\netcoreapp3.1\OpenTKApp.AssemblyInfo.cs
-D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\obj\Debug\netcoreapp3.1\OpenTKApp.csproj.CoreCompileInputs.cache
 D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\obj\Debug\netcoreapp3.1\OpenTKApp.csproj.CopyComplete
 D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\obj\Debug\netcoreapp3.1\OpenTKApp.dll
 D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\obj\Debug\netcoreapp3.1\OpenTKApp.pdb
 D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\obj\Debug\netcoreapp3.1\OpenTKApp.genruntimeconfig.cache
+D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\obj\Debug\netcoreapp3.1\OpenTKApp.csproj.AssemblyReference.cache
+D:\Projects\Visual Studio 2019\OpenTKApp\OpenTKApp\obj\Debug\netcoreapp3.1\OpenTKApp.Form1.resources

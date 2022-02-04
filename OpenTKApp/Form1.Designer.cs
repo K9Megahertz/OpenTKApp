@@ -1,5 +1,5 @@
 ﻿
-namespace Fresh_OpenTKApp
+namespace OpenTKApp
 {
     partial class Form1
     {
@@ -29,37 +29,50 @@ namespace Fresh_OpenTKApp
         /// </summary>
         private void InitializeComponent()
         {
-            this.renderCanvas = new OpenTK.WinForms.GLControl();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // renderCanvas
+            // tabControl1
             // 
-            this.renderCanvas.BackColor = System.Drawing.Color.Black;
-            this.renderCanvas.Location = new System.Drawing.Point(12, 12);
-            this.renderCanvas.Name = "renderCanvas";
-            this.renderCanvas.Size = new System.Drawing.Size(400, 400);
-            this.renderCanvas.TabIndex = 0;
-            //this.renderCanvas.VSync = false;
-            this.renderCanvas.Load += new System.EventHandler(this.renderCanvas_Load);
-            this.renderCanvas.Paint += new System.Windows.Forms.PaintEventHandler(this.renderCanvas_Paint);
+            this.tabControl1.Location = new System.Drawing.Point(227, 26);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(592, 381);
+            this.tabControl1.TabIndex = 0;
+            this.tabControl1.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.tabControl1_ControlAdded);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(46, 327);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(120, 38);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(421, 420);
-            this.Controls.Add(this.renderCanvas);
+            this.ClientSize = new System.Drawing.Size(831, 419);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Text = "Triangle";
+            this.Text = "VLSI Studio";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private OpenTK.WinForms.GLControl renderCanvas;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.Button button1;
     }
 
 }
