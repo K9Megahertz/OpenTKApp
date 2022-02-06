@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL;
 using Utils;
+using Matrix;
 
 
 
@@ -22,6 +23,20 @@ namespace OpenTKApp
 
         List<KeyValuePair<string, CircuitObject>> kvplist = new List<KeyValuePair<string, CircuitObject>>();
 
+        OpenTK.Mathematics.Matrix4 projectionMatrix = OpenTK.Mathematics.Matrix4.CreateOrthographic(800, 600, -1.0f, 1.0f);
+        float frame = 0;
+
+
+
+        //mouse shit for dragpanning
+        int xPos = 0;
+        int yPos = 0;
+
+        int deltaMouseX = 0;
+        int deltaMouseY = 0;
+
+        int savemousex = 0;
+        int savemousey = 0;
 
 
 
@@ -34,6 +49,8 @@ namespace OpenTKApp
 
         private void renderCanvas_Load(object sender, EventArgs e)
         {
+
+            //create a simple shader
             shader = new Shader("Shaders/VertexShader.glsl", "Shaders/FragmentShader.glsl");
 
             // Write the positions of vertices to a vertex shader
@@ -44,7 +61,11 @@ namespace OpenTKApp
                 return;
             }
 
+            OpenTK.WinForms.GLControl renderCanvas = (OpenTK.WinForms.GLControl)sender;
+            
+
             // Specify the color for clearing
+            GL.Viewport(0, 0, renderCanvas.Width, renderCanvas.Height);
             GL.ClearColor(Color.DarkSlateBlue);
 
 
@@ -56,8 +77,8 @@ namespace OpenTKApp
         {
             
             
-            co1.SetVertices(new float[]{ 0f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f });            
-            co2.SetVertices(new float[] { -1f, 0.1f, -1.1f, -0.1f, 1.1f, -0.1f });
+            co1.SetVertices(new float[] { 0.0f, 0.0f, 300.0f, 0.0f, 300.0f, 200.0f });
+            co2.SetVertices(new float[] { 0.0f, 0.0f, 300.0f, 0.0f, 300.0f, -200.0f });
 
             GLError.GLClearError();
 
@@ -115,44 +136,127 @@ namespace OpenTKApp
             GL.BufferData(BufferTarget.ArrayBuffer, co2.vertices.Length * sizeof(float), co2.vertices, BufferUsageHint.StaticDraw);
             GLError.GLCheckError();
 
+            // Enable the assignment to a_Position variable
+            GL.EnableVertexAttribArray(a_Position);
+            GLError.GLCheckError();
+
             // Get the storage location of a_Position
             a_Position = shader.GetAttribLocation("a_Position");
             // Assign the buffer object to a_Position variable
             GL.VertexAttribPointer(a_Position, 2, VertexAttribPointerType.Float, false, 0, 0);
             GLError.GLCheckError();
 
-            // Enable the assignment to a_Position variable
-            GL.EnableVertexAttribArray(a_Position);
-            GLError.GLCheckError();
+            
 
             return true;
         }
 
-        private void renderCanvas_Paint(object sender, PaintEventArgs e)
+        private void renderCanvas_MouseDown(object sender, MouseEventArgs e)
         {
 
+            if (e.Button == MouseButtons.Right)
+            {
+                
+
+                savemousex = e.X;
+                savemousey = e.Y;
+
+
+            }
+
+        }
+
+        private void renderCanvas_MouseUp(object sender, MouseEventArgs e)
+        {
+
+            /*if (e.Button == MouseButtons.Right)
+            {
+
+                deltaMouseX = e.X - savemousex;
+                deltaMouseY = e.Y - savemousey;
+
+                xPos -= deltaMouseX;
+                yPos += deltaMouseY;
+
+                savemousex = e.X;
+                savemousey = e.Y;
+
+            }*/
+
+        }
+        private void renderCanvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+
+                deltaMouseX = e.X - savemousex;
+                deltaMouseY = e.Y - savemousey;
+
+                xPos += deltaMouseX;
+                yPos -= deltaMouseY;
+
+                savemousex = e.X;
+                savemousey = e.Y;
+
+                OpenTK.WinForms.GLControl renderCanvas = (OpenTK.WinForms.GLControl)sender;
+                renderCanvas.Invalidate();
+
+            }
+        }
+
+        private void renderCanvas_Paint(object sender, PaintEventArgs e)
+        {
+            //Cast the sender
             OpenTK.WinForms.GLControl renderCanvas = (OpenTK.WinForms.GLControl)sender;
 
             if (canDraw)
             {
+
+                // Set the current glControl context to be active
                 renderCanvas.MakeCurrent();
                 GLError.GLCheckError();
-                GL.Viewport(0, 0, Width, Height);
+
+                // Set up our projection matrix based on the canvas size
+                projectionMatrix = OpenTK.Mathematics.Matrix4.CreateOrthographic(renderCanvas.Width, renderCanvas.Height, -1.0f, 1.0f);
+
+                OpenTK.Mathematics.Matrix4 translationMatrix = new OpenTK.Mathematics.Matrix4(1, 0, 0, xPos, 
+                                                                                              0, 1, 0, yPos, 
+                                                                                              0, 0, 1, 0, 
+                                                                                              0, 0, 0, 1);
+                OpenTK.Mathematics.Matrix4 finalMatrix = projectionMatrix * translationMatrix; 
+
+                //Create a viewport to match
+                GL.Viewport(0, 0, renderCanvas.Width, renderCanvas.Height);
                 GLError.GLCheckError();
 
                 // Clear the render canvas with the current color
                 GL.Clear(ClearBufferMask.ColorBufferBit);
                 GLError.GLCheckError();
 
+                //get the tabpage that the glControl is attached to by getting it parent
                 TabPage tp = (TabPage)renderCanvas.Parent;
-                KeyValuePair<string, CircuitObject> co = kvplist.Find(x => x.Key == tp.Name);
 
+                //TODO: fix this later
+                //KeyValuePair<string, CircuitObject> co = kvplist.Find(x => x.Key == tp.Name);
+
+
+                //TODO: hard coded for now for testing, I'll make this be determined at runtime later
                 if (tp.Name == "tabPage1")
-                    GL.BindVertexArray(vertexArrayObject1);
+                    GL.BindVertexArray(vertexArrayObject1);  //Bind verts for obj1
                 else
-                    GL.BindVertexArray(vertexArrayObject2);
-                
+                    GL.BindVertexArray(vertexArrayObject2);  //Bind verts for obj1
+
+                //Make the shader the active one
                 shader.Use();
+                
+                //get the location of the projection variable inside the shader so we can upload the matrix to it. Neo is waiting.
+                int loc = shader.GetUniformLocation("projection");
+                GLError.GLCheckError();
+
+                //Upload the projection matrix
+                GL.UniformMatrix4(loc, true, ref finalMatrix);
+                GLError.GLCheckError();
+
                 // Draw a triangle
                 GL.DrawArrays(PrimitiveType.Triangles, 0, 3);                
 
@@ -160,8 +264,12 @@ namespace OpenTKApp
                 GL.Flush();
                 GLError.GLCheckError();
 
+                //present our scene
                 renderCanvas.SwapBuffers();
                 GLError.GLCheckError();
+
+                frame+= 0.1f;
+                renderCanvas.Invalidate();
             }
         }
 
@@ -182,7 +290,7 @@ namespace OpenTKApp
             tabPage.Location = new System.Drawing.Point(4, 24);
             tabPage.Name = "tabPage" + (tabControl1.TabCount + 1).ToString();
             tabPage.Padding = new System.Windows.Forms.Padding(3);
-            tabPage.Size = new System.Drawing.Size(192, 72);
+            tabPage.Size = new System.Drawing.Size(192, 72);            
             tabPage.TabIndex = 0;
             tabPage.Text = title;
             tabPage.UseVisualStyleBackColor = true;
@@ -205,11 +313,16 @@ namespace OpenTKApp
             glControl.Text = "glControl";
             glControl.Dock = DockStyle.Fill;
 
-            glControl.Paint += new System.Windows.Forms.PaintEventHandler(renderCanvas_Paint);
+            glControl.Paint += new System.Windows.Forms.PaintEventHandler(renderCanvas_Paint);            
             glControl.Load += new System.EventHandler(renderCanvas_Load);
+            glControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.renderCanvas_MouseDown);
+            glControl.MouseUp += new System.Windows.Forms.MouseEventHandler(this.renderCanvas_MouseUp);
+            glControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.renderCanvas_MouseMove);
 
-            //KeyValuePair<string, CircuitObject> kvp = new KeyValuePair<string, CircuitObject>
 
+
+            //TODO: fix this up later 
+            //KeyValuePair<string, CircuitObject> kvp = new KeyValuePair<string, CircuitObject>;
             //kvplist.Add(new KeyValuePair<string, CircuitObject>(tabPage.Name, co1));
 
             tabPage.Controls.Add(glControl);
@@ -223,10 +336,39 @@ namespace OpenTKApp
        
 
         }
-
-        private void tabControl1_ControlAdded(object sender, ControlEventArgs e)
+                
+            
+            private void tabControl1_ControlAdded(object sender, ControlEventArgs e)
         {
             Logger.Append("You Added a control!");
+        }
+
+        private void tabControl1_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            //This code will render a "x" mark at the end of the Tab caption. 
+            e.Graphics.DrawString("x", e.Font, Brushes.Black, e.Bounds.Right - 15, e.Bounds.Top + 4);
+            e.Graphics.DrawString(this.tabControl1.TabPages[e.Index].Text, e.Font, Brushes.Black, e.Bounds.Left + 12, e.Bounds.Top + 4);
+            e.DrawFocusRectangle();
+
+        }
+
+        private void tabControl1_MouseDown(object sender, MouseEventArgs e)
+        {
+            //Looping through the controls.
+            for (int i = 0; i < this.tabControl1.TabPages.Count; i++)
+            {
+                Rectangle r = tabControl1.GetTabRect(i);
+                //Getting the position of the "x" mark.
+                Rectangle closeButton = new Rectangle(r.Right - 15, r.Top + 4, 9, 7);
+                if (closeButton.Contains(e.Location))
+                {
+                    if (MessageBox.Show("Would you like to Close this Tab?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        this.tabControl1.TabPages.RemoveAt(i);
+                        break;
+                    }
+                }
+            }
         }
     }
 }

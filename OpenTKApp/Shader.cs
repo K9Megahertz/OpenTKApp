@@ -155,10 +155,23 @@ namespace OpenTKApp
             int position = GL.GetAttribLocation(program, attribute);
             if (position < 0)
             {
-                Logger.Append("Failed to get the storage location of " + attribute);
+                Logger.Append("Failed to get the storage location of attribute" + attribute);
                 return -1;
             }
             return position;
         }
+
+        public int GetUniformLocation(string name)
+        {
+            int position = GL.GetUniformLocation(program, name);
+            if (position < 0)
+            {
+                Logger.Append("Failed to get the storage location of uniform" + name);
+                return -1;
+            }
+            return position;
+
+        }
+
     }
 }
